@@ -1,0 +1,153 @@
+{
+  "name": "BQ_2_SF",
+  "description": "Data Pipeline Application",
+  "artifact": {
+    "name": "cdap-data-pipeline",
+    "version": "6.5.1",
+    "scope": "SYSTEM"
+  },
+  "config": {
+    "resources": {
+      "memoryMB": 2048,
+      "virtualCores": 1
+    },
+    "driverResources": {
+      "memoryMB": 2048,
+      "virtualCores": 1
+    },
+    "connections": [
+      {
+        "from": "BigQuery",
+        "to": "Wrangler"
+      },
+      {
+        "from": "Wrangler",
+        "to": "Salesforce"
+      }
+    ],
+    "comments": [],
+    "postActions": [],
+    "properties": {},
+    "processTimingEnabled": true,
+    "stageLoggingEnabled": false,
+    "stages": [
+      {
+        "name": "BigQuery",
+        "plugin": {
+          "name": "BigQueryTable",
+          "type": "batchsource",
+          "label": "BigQuery",
+          "artifact": {
+            "name": "google-cloud",
+            "version": "0.18.1",
+            "scope": "SYSTEM"
+          },
+          "properties": {
+            "useConnection": "false",
+            "project": "auto-detect",
+            "datasetProject": "${Project_ID}",
+            "serviceAccountType": "filePath",
+            "serviceFilePath": "auto-detect",
+            "referenceName": "BigQuery",
+            "dataset": "${Dataset_Name}",
+            "table": "${BQ_table_name}",
+            "enableQueryingViews": "false",
+            "schema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB_DT__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timestamp_field__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Integer_field__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decimal_field__c\",\"type\":[{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":8,\"scale\":3},\"null\"]}]}"
+          }
+        },
+        "outputSchema": [
+          {
+            "name": "etlSchemaBody",
+            "schema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB_DT__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timestamp_field__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Integer_field__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decimal_field__c\",\"type\":[{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":8,\"scale\":3},\"null\"]}]}"
+          }
+        ],
+        "id": "BigQuery",
+        "type": "batchsource",
+        "label": "BigQuery",
+        "icon": "fa-plug"
+      },
+      {
+        "name": "Wrangler",
+        "plugin": {
+          "name": "Wrangler",
+          "type": "transform",
+          "label": "Wrangler",
+          "artifact": {
+            "name": "wrangler-transform",
+            "version": "4.5.1",
+            "scope": "SYSTEM"
+          },
+          "properties": {
+            "field": "*",
+            "precondition": "false",
+            "on-error": "fail-pipeline",
+            "schema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB_DT__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timestamp_field__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Integer_field__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decimal_field__c\",\"type\":[\"string\",\"null\"]}]}"
+          }
+        },
+        "outputSchema": [
+          {
+            "name": "etlSchemaBody",
+            "schema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB_DT__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timestamp_field__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Integer_field__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decimal_field__c\",\"type\":[\"string\",\"null\"]}]}"
+          }
+        ],
+        "inputSchema": [
+          {
+            "name": "BigQuery",
+            "schema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB_DT__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timestamp_field__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Integer_field__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decimal_field__c\",\"type\":[{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":8,\"scale\":3},\"null\"]}]}"
+          }
+        ],
+        "id": "Wrangler",
+        "type": "transform",
+        "label": "Wrangler",
+        "icon": "icon-DataPreparation"
+      },
+      {
+        "name": "Salesforce",
+        "plugin": {
+          "name": "Salesforce",
+          "type": "batchsink",
+          "label": "Salesforce",
+          "artifact": {
+            "name": "salesforce-plugins",
+            "version": "1.4.3",
+            "scope": "USER"
+          },
+          "properties": {
+            "referenceName": "Salesforce",
+            "username": "${secure(username)}",
+            "password": "${secure(password)}",
+            "securityToken": "${secure(security_token)}",
+            "consumerKey": "${secure(consumer_key)}",
+            "consumerSecret": "${secure(consumer_secret)}",
+            "loginUrl": "https://login.salesforce.com/services/oauth2/token",
+            "sObject": "${SObject_Name}",
+            "operation": "insert",
+            "maxRecordsPerBatch": "10000",
+            "maxBytesPerBatch": "10000000",
+            "errorHandling": "Skip on error"
+          }
+        },
+        "outputSchema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"int\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"boolean\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timesamp__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Intger__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decmal__c\",\"type\":[\"string\",\"null\"]}]}",
+        "inputSchema": [
+          {
+            "name": "Wrangler",
+            "schema": "{\"type\":\"record\",\"name\":\"etlSchemaBody\",\"fields\":[{\"name\":\"Name__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Marks__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Result__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"DOB_DT__c\",\"type\":[\"string\",\"null\"]},{\"name\":\"Timestamp_field__c\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"Integer_field__c\",\"type\":[\"long\",\"null\"]},{\"name\":\"Decimal_field__c\",\"type\":[\"string\",\"null\"]}]}"
+          }
+        ],
+        "id": "Salesforce",
+        "type": "batchsink",
+        "label": "Salesforce",
+        "icon": "fa-plug"
+      }
+    ],
+    "schedule": "0 1 */1 * *",
+    "engine": "spark",
+    "numOfRecordsPreview": 100,
+    "rangeRecordsPreview": {
+      "min": 1,
+      "max": "5000"
+    },
+    "description": "Data Pipeline Application",
+    "maxConcurrentRuns": 1
+  }
+}
